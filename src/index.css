@@ -1,0 +1,48 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", "Microsoft JhengHei", "PingFang TC", sans-serif;
+  --font-display: "Outfit", "Microsoft JhengHei", "PingFang TC", sans-serif;
+  --font-mono: "Fira Code", monospace;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: #0A0B0E;
+  background-image: radial-gradient(circle at 50% 0%, rgba(99, 102, 241, 0.15) 0%, rgba(10, 11, 14, 1) 100%);
+  color: #cbd5e1;
+  min-height: 100vh;
+}
+
+/* Elegant Dark utilities */
+.glass-panel {
+  background: rgba(22, 24, 29, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+}
+
+.input-area {
+  background: rgba(15, 17, 21, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.button-glow {
+  box-shadow: 0 0 20px rgba(99, 102, 241, 0.4);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
