@@ -25,6 +25,7 @@ export default function App() {
   const [selectedOption, setSelectedOption] = useState<string>("完整會議記錄 (精細)");
   const [targetLanguage, setTargetLanguage] = useState<string>("繁體中文");
   const [customContext, setCustomContext] = useState<string>("");
+  const [provider, setProvider] = useState<"gemini" | "nvidia">("gemini");
 
   // UI state
   const [loading, setLoading] = useState<boolean>(false);
@@ -137,6 +138,7 @@ export default function App() {
           option: selectedOption,
           language: targetLanguage,
           customContext: customContext,
+          provider: provider,
         }),
       });
 
@@ -148,7 +150,7 @@ export default function App() {
       setResult(data.result);
     } catch (err: any) {
       console.error(err);
-      setError(err.message || "連線至後端 AI 服務時發生錯誤。請確認伺服器運作正常，並已填寫金鑰。");
+      setError(err.message || "連線至後端 AI 服務時發生錯誤。請確認您的 .env.local 檔案或 Vercel 後台已設定正確的金鑰，且伺服器運作正常。");
     } finally {
       setLoading(false);
     }
@@ -195,13 +197,13 @@ export default function App() {
               AI 會議記錄生成與翻譯工具
             </h1>
             <p className="text-xs text-slate-400 font-sans mt-0.5">
-              Powered by Google Gemini 3.5 & Express Backend Proxy
+              Powered by Google Gemini & NVIDIA via Vercel Serverless
             </p>
           </div>
         </div>
         <div className="flex items-center gap-2 text-xs bg-white/5 text-slate-400 px-3 py-1.5 rounded-lg border border-white/10 font-semibold select-none">
-          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-          <span>後端安全代理模式</span>
+          <span className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse"></span>
+          <span>Vercel Serverless 代理</span>
         </div>
       </header>
 
@@ -319,9 +321,39 @@ export default function App() {
               <span>智能AI解析設定參數</span>
             </h3>
 
+            {/* AI Provider selection */}
+            <div>
+              <label className="text-xs text-slate-400 font-bold block mb-2">1. 選擇 AI 服務提供商與模型</label>
+              <div className="grid grid-cols-2 gap-2">
+                {[
+                  { id: "gemini", name: "Google Gemini", model: "gemini-2.5-flash-lite", icon: "🤖" },
+                  { id: "nvidia", name: "NVIDIA", model: "nvidia/nemotron-mini-4b-instruct", icon: "🟢" }
+                ].map((item) => (
+                  <button
+                    key={item.id}
+                    onClick={() => setProvider(item.id as "gemini" | "nvidia")}
+                    type="button"
+                    className={`px-3 py-2.5 rounded-xl text-xs font-medium border text-left transition duration-200 cursor-pointer flex flex-col gap-1 ${
+                      provider === item.id 
+                        ? "border-indigo-500 bg-indigo-600/20 text-indigo-300 font-bold button-glow" 
+                        : "border-white/10 hover:bg-white/5 text-slate-400 hover:text-slate-200"
+                    }`}
+                  >
+                    <div className="flex items-center gap-1.5 font-bold">
+                      <span>{item.icon}</span>
+                      <span>{item.name}</span>
+                    </div>
+                    <span className="text-[10px] text-slate-500 font-mono font-normal">
+                      {item.model}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
             {/* Mode / preset option */}
             <div>
-              <label className="text-xs text-slate-400 font-bold block mb-2">1. 選擇會議整理模式</label>
+              <label className="text-xs text-slate-400 font-bold block mb-2">2. 選擇會議整理模式</label>
               <div className="grid grid-cols-2 gap-2">
                 {[
                   "完整會議記錄 (精細)",
@@ -349,7 +381,7 @@ export default function App() {
             <div>
               <label className="text-xs text-slate-400 font-bold block mb-2 flex items-center gap-1">
                 <Languages className="h-3.5 w-3.5 text-indigo-400" />
-                <span>2. 翻譯與輸出語系</span>
+                <span>3. 翻譯與輸出語系</span>
               </label>
               <div className="grid grid-cols-5 gap-1.5 bg-black/40 p-1.5 rounded-xl border border-white/10">
                 {["繁體中文", "English", "日本語", "한국어", "Español"].map((lang) => (
@@ -405,7 +437,7 @@ export default function App() {
                 <AlertCircle className="h-4 w-4 shrink-0 mt-0.5 text-rose-400" />
                 <div className="flex-1">
                   <p className="font-bold">{error}</p>
-                  <p className="text-[10px] text-slate-400 mt-1">請確實在 Settings 介面加入 GEMINI_API_KEY 金鑰以解鎖 AI 服務。</p>
+                  <p className="text-[10px] text-slate-400 mt-1">請確實在 .env.local 檔案或 Vercel 後台設定 GEMINI_API_KEY 與 NVIDIA_API_KEY 金鑰以解鎖對應的 AI 服務。</p>
                 </div>
               </div>
             )}
